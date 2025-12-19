@@ -257,5 +257,9 @@ if __name__ == "__main__":
                        help="Scan type: safe (TCP) or syn (requires root)")
     args = parser.parse_args()
     
-    scanner = ReconTool(args.domain, args.threads, args.full_scan, args.scan_type)
-    scanner.run()
+    try:
+        scanner = ReconTool(args.domain, args.threads, args.full_scan, args.scan_type)
+        scanner.run()
+    except KeyboardInterrupt:
+        print("\n[!] Scan interrupted by user")
+        sys.exit(1)

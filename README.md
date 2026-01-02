@@ -65,7 +65,7 @@ python3 recon.py --input subdomains.txt
 ```
 ### Specify Output File
 ```bash 
-python3 main.py --input httpx.json --output report.json
+python3 recon.py --input httpx.json --output report.json
 ```
 ## Generate HTML Report
 ```bash 

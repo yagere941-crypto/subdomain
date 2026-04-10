@@ -1,49 +1,32 @@
-# AI‑Assisted Recon Notes Generator
+## Recon Notes Generator
 
-An **AI‑assisted reconnaissance report generator** for ethical hacking and security assessments.  
-This tool parses outputs from common recon tools and produces **structured, risk‑analyzed reports**.
+A simple tool to turn raw reconnaissance output into clean, readable reports.
 
-> ⚠️ **For educational and authorized security testing only**
-
----
-
-## ✨ Features
-
-- Parses outputs from:
-  - **Subfinder** (`.txt`)
-  - **Httpx** (`.json` – JSON lines)
-  - **Nmap** (`.xml`)
-- Automatically analyzes findings and assigns:
-  - Risk level (**LOW / MEDIUM / HIGH**)
-  - Risk score
-  - Explanation
-  - Mitigation advice
-- Supports multiple output formats:
-  - **JSON**
-  - **CSV**
-  - **HTML**
-- Graceful handling of:
-  - Invalid files
-  - Permission errors
-  - Malformed JSON/XML
-  - **Ctrl + C (Keyboard Interrupt)**
-- Designed for **ethical hackers, bug bounty hunters, and students**
+It takes results from tools like Subfinder, Httpx, and Nmap, and converts them into structured findings with basic risk analysis.
 
 ---
-
-## 📁 Supported Input Formats
-
-| Tool        | File Type | Description |
-|------------|----------|-------------|
-| Subfinder  | `.txt`   | List of discovered subdomains |
-| Httpx      | `.json`  | JSON‑lines output |
-| Nmap       | `.xml`   | XML scan results |
-
+##### ⚠️ Use only on systems you have permission to test.
 ---
 
-## 🛠 Installation
+## What it does
+- Reads recon output from:
+  - Subfinder (`.txt`)
+  - Httpx (`.json` – JSON lines)
+  - Nmap (`.xml`)
+- Extracts useful findings (subdomains, URLs, open ports)
+  - Assigns a basic risk level:
+  - LOW
+  - MEDIUM
+  - HIGH
+- Adds short explanations for why something might be risky
+- Exports results in:
+  - JSON
+  - CSV
+  - HTML (simple readable report)
 
-Clone the repository:
+--- 
+
+## Installation
 
 ```bash
 git clone https://github.com/yagere941-crypto/recon.git
@@ -51,107 +34,105 @@ cd recon
 ```
 ---
 
-### Ensure Python 3.8+ is installed:
+## Make sure Python is installed:
 ```bash
-python3 --version
+git clone https://github.com/yagere941-crypto/recon.git
+cd recon
 ```
+Note> No extra packages needed — it uses only the standard library.
 
-No external dependencies required (uses Python standard library only). 
+---
 
-## 🚀 Usage
-Basic Usage
+## Usage: 
+---
+## 1. basic
 ```bash 
 python3 recon.py --input subdomains.txt
 ```
-### Specify Output File
+## 2. Save output to a file
 ```bash 
 python3 recon.py --input httpx.json --output report.json
 ```
-## Generate HTML Report
-```bash 
-python3 main.py --input nmap.xml --format html --output report.html
+## 3. HTML report
+```bash
+python3 recon.py --input nmap.xml --format html --output report.html
 ```
-## Generate CSV Report
+## 4. CSV export
 ```bash 
-python3 main.py --input httpx.json --format csv --output report.csv
+python3 recon.py --input httpx.json --format csv --output report.csv
 ```
 
 ---
 
-## CLI Options
-
-| Option      | Description |
-|-------------|----------------|
-| --input     | Input file (.txt, .json, .xml) (required) |
-| --output    | Output file name (default: recon_notes.json) |
-| --format    | Output format: json, csv, html |
+## Options
+- --input → input file (.txt, .json, .xml) (required)
+- --output → output file (default: recon_notes.json)
+- --format → json, csv, or html
+- --verbose → more detailed logs
+- --version → show version
 
 ---
 
-## 📊 Risk Analysis Logic (Overview)
+## How risk is decided
+
+#### This tool uses simple rules (not advanced scoring):
 
 - Open ports
-
-  - Privileged ports (<1024) increase risk
----
+  - Ports below 1024 are treated as higher risk
 - Subdomains
-    - Keywords like admin, dev, test increase risk
----
+  - Names like admin, dev, test increase risk
 - URLs
+  - No WAF detected → more risky
+  - 5xx status codes → possible server issues
 
-    - No WAF detected → higher risk
-
-    - 5xx status codes increase risk
----
-- Risk Levels:
-
-    - LOW – Minimal exposure
-
-    - MEDIUM – Review recommended
-
-    - HIGH – Immediate attention required
+#### This is meant for quick insight, not a full security assessment.
 
 ---
-
-## 🧠 Example Output (JSON)
-```json
+## Example output (JSON)
+```JSON
 {
   "summary": {
     "HIGH": 2,
     "MEDIUM": 3,
     "LOW": 5
   },
+  "total_findings": 10,
   "findings": [
     {
       "type": "port",
+      "value": "192.168.1.1:22",
       "risk": "HIGH",
       "risk_score": 5,
-      "description": "Open port 22 on 192.168.1.1 running ssh.",
-      "mitigation": "Restrict access or secure the exposed service."
+      "explanations": [
+        "Privileged port 22 is accessible"
+      ],
+      "mitigations": [
+        "Review security configuration"
+      ]
     }
   ]
 }
 ```
-## 🧹 Graceful Exit
-
-**The tool safely handles:**
-
-- Ctrl + C interruption
-
-- Active threads cleanup
-
-- Partial execution recovery
 ---
-## 🔐 Legal Disclaimer
+## Notes
+- The tool skips broken or malformed data instead of crashing
+- Handles Ctrl+C safely
+- Logging is written to both console and a log file
+---
+## Limitations
+- Uses simple rule-based logic (no real AI yet)
+- Risk scoring is basic
+- Mitigation advice is generic
+- CSV output is minimal
+---
+## Future ideas
+- Better scoring (CVSS or similar)
+- Support for more tools
+- Markdown reports
+- Smarter analysis
+---
+## Disclaimer
 
-This tool is intended only for authorized security testing and educational purposes.
-The author is not responsible for misuse.
-## 📌 Future Improvements
-
-- Markdown report support
-
-- CVSS‑based scoring
-
-- Plugin system for additional recon tools
-
-- AI‑generated executive summaries
+#### This project is for learning and authorized testing only.
+#### Do not use it on systems without permission.
+---

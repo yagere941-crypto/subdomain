@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 AI-Assisted Recon Notes Generator
 Parses outputs from subfinder, httpx, and nmap tools
